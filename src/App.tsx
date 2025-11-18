@@ -1,4 +1,4 @@
-import { Router, Route } from "wouter";
+import { Router, Switch, Route } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -12,9 +12,11 @@ import NotFound from "@/pages/not-found";
 function AppRouter() {
   return (
     <Router hook={useHashLocation}>
-      <Route path="/" component={Home} />
-      <Route path="/game/:id" component={Game} />
-      <Route component={NotFound} />
+	  <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/game/:id" component={Game} />
+        <Route component={NotFound} />
+	  </Switch>
     </Router>
   );
 }
