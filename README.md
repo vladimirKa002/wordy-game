@@ -77,4 +77,6 @@ Deployment is done by pushing the built files (from `dist/`) to the `gh-pages` b
 - Designed mobile-first, ensuring usability on small screens.  
 - Works well as a static deployment (GitHub Pages, Netlify, Replit Web Server, etc.).
 
+❗️**Important**: Need to manualy bump the `CACHE_NAME` in service worker file to push updates.
+
 ---

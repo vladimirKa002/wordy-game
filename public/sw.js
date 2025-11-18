@@ -1,4 +1,4 @@
-const CACHE_NAME = 'word-finder-v1';
+const CACHE_NAME = 'word-finder-v1.1';
 const BASE = '/wordy-game';
 
 // Install service worker and pre-cache the app shell
