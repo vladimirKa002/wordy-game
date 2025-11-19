@@ -1,31 +1,24 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA, ManifestOptions } from 'vite-plugin-pwa';
+import path from 'path';
+import manifest from './public/manifest.json';
 
 export default defineConfig({
+  base: '/wordy-game/',
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-          await import("@replit/vite-plugin-dev-banner").then((m) =>
-            m.devBanner(),
-          ),
-        ]
-      : []),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: manifest as Partial<ManifestOptions>,
+      workbox: {
+        navigateFallback: '/wordy-game/src/index.html',
+      },
+    }),
   ],
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
-  // root: path.resolve(import.meta.dirname),
-  base: "/wordy-game/",
 });
