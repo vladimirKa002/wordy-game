@@ -12,7 +12,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: manifest as Partial<ManifestOptions>,
       workbox: {
-        navigateFallback: '/wordy-game/src/index.html',
+        navigateFallback: '/wordy-game/index.html',
       },
     }),
   ],
