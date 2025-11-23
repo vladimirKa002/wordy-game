@@ -150,7 +150,7 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4 px-2 py-3 sm:px-4 sm:py-6">
             {sourceWords.map((sourceWord) => (
               <Card 
                 key={sourceWord.id}
