@@ -34,13 +34,15 @@ export function LetterTile({
         bg-primary text-primary-foreground
         rounded-md font-mono font-bold
         overflow-hidden
-        text-[clamp(0.5rem,12cqw,1.8rem)]
+        [container-type:size]
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
       `}
       style={{ flexBasis: basis }}
       data-testid={`letter-tile-${index}`}
     >
-      {letter}
+      <div className="text-[8cqmin] leading-none select-none">
+        {letter}
+      </div>
     </div>
   );
 }
