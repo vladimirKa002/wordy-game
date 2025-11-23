@@ -186,6 +186,7 @@ export default function Game() {
                     key={`${letter}-${index}`}
                     letter={letter}
                     index={index}
+                    count={letterArrangement.length}
                     onDragStart={handleDragStart}
                     onDragOver={handleDragOver}
                     onDragEnd={handleDragEnd}
