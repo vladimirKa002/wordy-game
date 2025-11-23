@@ -212,6 +212,11 @@ export default function Game() {
                       handleAddWord();
                     }
                   }}
+                  onFocus={(e) => {
+                    setTimeout(() => {
+                      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 250);
+                  }}
                   placeholder="Введите слово..."
                   className="text-lg font-medium"
                   data-testid="input-word"
