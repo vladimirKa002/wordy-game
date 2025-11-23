@@ -180,7 +180,7 @@ export default function Game() {
                   Перемешать
                 </Button>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+              <div className="flex w-full gap-1">
                 {letterArrangement.map((letter, index) => (
                   <LetterTile
                     key={`${letter}-${index}`}

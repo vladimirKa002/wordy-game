@@ -28,17 +28,12 @@ export function LetterTile({
       onDragOver={(e) => onDragOver(e, index)}
       onDragEnd={onDragEnd}
       className={`
-        flex-1 basis-0           /* shrink tiles evenly */
-        min-w-[1.8rem] min-h-[1.8rem]
-        max-w-10 max-h-10
         aspect-square
         flex items-center justify-center
         bg-primary text-primary-foreground
         rounded-md font-mono font-bold
-        text-[1.2em]             /* <= font scales with tile */
-        cursor-grab active:cursor-grabbing
-        transition-all select-none
-        hover-elevate active-elevate-2
+        overflow-hidden
+        text-[0.7em]
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
       `}
       style={{ flexBasis: basis }}
