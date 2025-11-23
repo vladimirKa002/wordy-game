@@ -34,7 +34,7 @@ export function LetterTile({
         bg-primary text-primary-foreground
         rounded-md font-mono font-bold
         overflow-hidden
-        text-[1.5em]
+        text-[clamp(0.7rem, 3vw, 1.5rem)]
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
       `}
       style={{ flexBasis: basis }}
