@@ -30,11 +30,11 @@ export function LetterTile({
       className={`
         aspect-square
         flex items-center justify-center
-        max-w-10 max-h-10
+        max-w-8 max-h-8
         bg-primary text-primary-foreground
         rounded-md font-mono font-bold
         overflow-hidden
-        text-[clamp(0.7rem, 2vw, 1.5rem)]
+        text-[clamp(0.7rem, 4vw, 1.5rem)]
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
       `}
       style={{ flexBasis: basis }}

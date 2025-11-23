@@ -213,9 +213,26 @@ export default function Game() {
                     }
                   }}
                   onFocus={(e) => {
+                    const el = e.target as HTMLElement;
+
+                    // iOS Safari fix
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
                     setTimeout(() => {
-                      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 250);
+                      if (isIOS) {
+                        // Force iOS to scroll the input into view
+                        const rect = el.getBoundingClientRect();
+                        const y = rect.top + window.scrollY - 100; // adjust offset if needed
+
+                        window.scrollTo({
+                          top: y,
+                          behavior: "smooth",
+                        });
+                      } else {
+                        // Normal browsers
+                        el.scrollIntoView({ behavior: "smooth", block: "center" });
+                      }
+                    }, 350); // iOS needs 300–400ms delay for keyboard animation
                   }}
                   placeholder="Введите слово..."
                   className="text-lg font-medium"
