@@ -162,10 +162,10 @@ export default function Game() {
       </header>
 
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+        <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-6 space-y-4 sm:space-y-6">
           {/* Letter Manipulation Bar */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                   Буквы
@@ -199,7 +199,7 @@ export default function Game() {
 
           {/* Word Input */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">
                 Добавить новое слово
               </h2>
@@ -230,7 +230,7 @@ export default function Game() {
 
           {/* Found Words with Tabs */}
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-3 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                   Найденные слова
