@@ -34,7 +34,7 @@ export function DeleteDialog({
           <div className="space-y-2">
             <Label htmlFor="word">{description}</Label>
           </div>
-          <div className="flex gap-2 justify-end">
+          <div className="flex gap-2 justify-center">
             <Button
               variant="outline"
               onClick={() => {
