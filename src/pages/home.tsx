@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { DeleteDialog } from "@/components/delete-dialog";
 import { LocalStorage } from "@/lib/storage";
 import type { SourceWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +16,9 @@ export default function Home() {
   const [sourceWords, setSourceWords] = useState<SourceWord[]>(() => LocalStorage.getSourceWords());
   const [newWord, setNewWord] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogWord, setDeleteDialogWord] = useState<[string, string]>();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const { toast } = useToast();
 
   const handleAddWord = () => {
@@ -174,7 +178,8 @@ export default function Home() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleDelete(sourceWord.id, sourceWord.word);
+                          setDeleteDialogOpen(true);
+                          setDeleteDialogWord([sourceWord.id, sourceWord.word]);
                         }}
                         data-testid={`button-delete-${sourceWord.id}`}
                         className="opacity-0 group-hover:opacity-100 transition-opacity"
@@ -191,6 +196,14 @@ export default function Home() {
                 </Link>
               </Card>
             ))}
+            <DeleteDialog
+              dialogOpen={deleteDialogOpen}
+              setDialogOpen={setDeleteDialogOpen}
+              title="Удалить"
+              description={`Вы уверены, что хотите удалить слово "${deleteDialogWord?.[1]}"?`}
+              onConfirm={() => handleDelete(deleteDialogWord![0], deleteDialogWord![1])}
+              onCancel={()=>{}}
+            />
           </div>
         )}
       </div>

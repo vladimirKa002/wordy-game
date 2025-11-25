@@ -90,6 +90,15 @@ export default function Game() {
     const firstLetter = trimmed[0];
     setActiveTab(firstLetter);
   };
+  
+  const handleDeleteWord = (id: string, word: string) => {
+    LocalStorage.deleteFoundWord(id);
+    setFoundWords(foundWords.filter(w => w.id !== id));
+    toast({
+      title: "Удалено",
+      description: `"${word}" было удалено`,
+    });
+  };
 
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
@@ -279,7 +288,7 @@ export default function Game() {
                       </p>
                     </div>
                   ) : (
-                    <FoundWordsList words={sortWords([...foundWords])}/>
+                    <FoundWordsList words={sortWords([...foundWords])} deleteHandler={handleDeleteWord}/>
                   )}
                 </TabsContent>
                 
@@ -292,7 +301,7 @@ export default function Game() {
                         </p>
                       </div>
                     ) : (
-                      <FoundWordsList words={getWordsByLetter(letter)} />
+                      <FoundWordsList words={getWordsByLetter(letter)} deleteHandler={handleDeleteWord}/>
                     )}
                   </TabsContent>
                 ))}

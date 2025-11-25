@@ -58,6 +58,11 @@ export class LocalStorage {
     const foundWords = this.getFoundWords(sourceWordId);
     return foundWords.some(w => w.word.toLowerCase() === word.toLowerCase());
   }
+
+  static deleteFoundWord(id: string): void {
+    const foundWords = this.getFoundWords().filter(w => w.id !== id);
+    localStorage.setItem(STORAGE_KEYS.FOUND_WORDS, JSON.stringify(foundWords));
+  }
 }
 
 // Word validation utilities
