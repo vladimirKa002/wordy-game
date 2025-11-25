@@ -16,6 +16,11 @@ export function FoundWordsList({ words }: FoundWordsListProps) {
           data-testid={`found-word-${word.word}`}
         >
           {word.word}
+          {word.word.length >= 6 && (
+            <sup className="ml-0.5 text-xs font-normal">
+              {word.word.length}
+            </sup>
+          )}
         </Badge>
       ))}
     </div>

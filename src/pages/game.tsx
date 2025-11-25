@@ -118,10 +118,17 @@ export default function Game() {
     return Array.from(letters).sort();
   };
 
+  const sortWords = (words: FoundWord[]): FoundWord[] => {
+    return words.sort((a, b) => {
+        if (a.word.length !== b.word.length) {
+          return a.word.length - b.word.length;
+        }
+        return a.word.localeCompare(b.word);
+      });
+  };
+
   const getWordsByLetter = (letter: string): FoundWord[] => {
-    return [...foundWords]
-      .filter(w => w.word[0] === letter)
-      .sort((a, b) => a.word.localeCompare(b.word));
+    return sortWords([...foundWords].filter(w => w.word[0] === letter));
   };
 
   if (!sourceWord) {
@@ -212,28 +219,6 @@ export default function Game() {
                       handleAddWord();
                     }
                   }}
-                  onFocus={(e) => {
-                    const el = e.target as HTMLElement;
-
-                    // iOS Safari fix
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-                    setTimeout(() => {
-                      if (isIOS) {
-                        // Force iOS to scroll the input into view
-                        const rect = el.getBoundingClientRect();
-                        const y = rect.top + window.scrollY - 100; // adjust offset if needed
-
-                        window.scrollTo({
-                          top: y,
-                          behavior: "smooth",
-                        });
-                      } else {
-                        // Normal browsers
-                        el.scrollIntoView({ behavior: "smooth", block: "center" });
-                      }
-                    }, 350); // iOS needs 300–400ms delay for keyboard animation
-                  }}
                   placeholder="Введите слово..."
                   className="text-lg font-medium"
                   data-testid="input-word"
@@ -294,9 +279,7 @@ export default function Game() {
                       </p>
                     </div>
                   ) : (
-                    <FoundWordsList
-                      words={[...foundWords].sort((a, b) => a.word.localeCompare(b.word))}
-                    />
+                    <FoundWordsList words={sortWords([...foundWords])}/>
                   )}
                 </TabsContent>
                 
