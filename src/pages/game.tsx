@@ -137,7 +137,12 @@ export default function Game() {
   };
 
   const sortWordsByAlphabet = (words: FoundWord[]): FoundWord[] => {
-    return words.sort((a, b) => a.word.localeCompare(b.word));
+    return words.sort((a, b) => {
+        if (a.word[0] !== b.word[0]) {
+          return a.word[0].localeCompare(b.word[0]);
+        }
+        return a.word.length - b.word.length;
+      });
   };
 
   const getWordsByLetter = (letter: string): FoundWord[] => {
