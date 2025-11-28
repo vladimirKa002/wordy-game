@@ -127,7 +127,7 @@ export default function Game() {
     return Array.from(letters).sort();
   };
 
-  const sortWords = (words: FoundWord[]): FoundWord[] => {
+  const sortWordsByLength = (words: FoundWord[]): FoundWord[] => {
     return words.sort((a, b) => {
         if (a.word.length !== b.word.length) {
           return a.word.length - b.word.length;
@@ -136,8 +136,12 @@ export default function Game() {
       });
   };
 
+  const sortWordsByAlphabet = (words: FoundWord[]): FoundWord[] => {
+    return words.sort((a, b) => a.word.localeCompare(b.word));
+  };
+
   const getWordsByLetter = (letter: string): FoundWord[] => {
-    return sortWords([...foundWords].filter(w => w.word[0] === letter));
+    return sortWordsByLength([...foundWords].filter(w => w.word[0] === letter));
   };
 
   if (!sourceWord) {
@@ -288,7 +292,7 @@ export default function Game() {
                       </p>
                     </div>
                   ) : (
-                    <FoundWordsList words={sortWords([...foundWords])} deleteHandler={handleDeleteWord}/>
+                    <FoundWordsList words={sortWordsByAlphabet([...foundWords])} deleteHandler={handleDeleteWord}/>
                   )}
                 </TabsContent>
                 
