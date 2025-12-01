@@ -141,7 +141,10 @@ export default function Game() {
         if (a.word[0] !== b.word[0]) {
           return a.word[0].localeCompare(b.word[0]);
         }
-        return a.word.length - b.word.length;
+        if (a.word.length !== b.word.length) {
+          return a.word.length - b.word.length;
+        }
+        return a.word.localeCompare(b.word);
       });
   };
 
