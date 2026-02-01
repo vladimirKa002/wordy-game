@@ -26,7 +26,7 @@ export function DeleteDialog({
 }: DeleteDialogProps) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogContent>
+      <DialogContent className="w-[95vw] max-w-md rounded-lg">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
