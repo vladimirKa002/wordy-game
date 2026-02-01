@@ -163,87 +163,88 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-4 py-6">
         <header className="flex items-center justify-between mb-8 gap-2">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Поиск слов</h1>
+            <div className="flex flex-row items-start justify-between">
+              <h1 className="text-3xl font-bold text-foreground">Поиск слов</h1>
+              <div className="flex gap-2">
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="icon" data-testid="button-add-word">
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Добавить исходное слово</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="word">Исходное слово</Label>
+                      <Input
+                        id="word"
+                        data-testid="input-source-word"
+                        placeholder="Введите слово (5-20 букв)"
+                        value={newWord}
+                        onChange={(e) => setNewWord(e.target.value.toUpperCase())}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleAddWord();
+                          }
+                        }}
+                        className="text-lg font-medium"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        {newWord.length}/20 символов
+                      </p>
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setDialogOpen(false);
+                          setNewWord("");
+                        }}
+                        data-testid="button-cancel"
+                      >
+                        Отмена
+                      </Button>
+                      <Button 
+                        onClick={handleAddWord}
+                        data-testid="button-save-word"
+                      >
+                        Добавить слово
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      size="icon" 
+                      variant="outline"
+                      data-testid="button-import-menu"
+                      title="Импортировать слова"
+                    >
+                      <Upload className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleImport}>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Из файла JSON
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handlePasteFromClipboard}>
+                      <Copy className="w-4 h-4 mr-2" />
+                      Из буфера обмена
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
             <p className="text-sm text-muted-foreground mt-1">
               Найдите слова из исходного слова
             </p>
-          </div>
-          
-          <div className="flex gap-2">
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="icon" data-testid="button-add-word">
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Добавить исходное слово</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="word">Исходное слово</Label>
-                  <Input
-                    id="word"
-                    data-testid="input-source-word"
-                    placeholder="Введите слово (5-20 букв)"
-                    value={newWord}
-                    onChange={(e) => setNewWord(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        handleAddWord();
-                      }
-                    }}
-                    className="text-lg font-medium"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    {newWord.length}/20 символов
-                  </p>
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setDialogOpen(false);
-                      setNewWord("");
-                    }}
-                    data-testid="button-cancel"
-                  >
-                    Отмена
-                  </Button>
-                  <Button 
-                    onClick={handleAddWord}
-                    data-testid="button-save-word"
-                  >
-                    Добавить слово
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  size="icon" 
-                  variant="outline"
-                  data-testid="button-import-menu"
-                  title="Импортировать слова"
-                >
-                  <Upload className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleImport}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Из файла JSON
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handlePasteFromClipboard}>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Из буфера обмена
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </header>
 
