@@ -275,7 +275,7 @@ export default function Home() {
                 data-testid={`card-source-${sourceWord.id}`}
               >
                 <Link href={`/game/${sourceWord.id}`}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 gap-2">
+                  <CardHeader className="flex flex-row items-center justify-start space-y-0 pb-4 gap-2">
                     <div className="flex flex-col items-start justify-center gap-1">
                       <h3 className="text-xl font-semibold tracking-wide font-mono">
                         {sourceWord.word}
@@ -284,7 +284,7 @@ export default function Home() {
                         {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end justify-center gap-2">
+                    <div className="flex flex-col items-end justify-start gap-1">
                       <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
                         {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
                       </Badge>

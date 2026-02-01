@@ -16,8 +16,9 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" title="Показать статистику эффективности">
+        <Button variant="outline" size="sm">
           <BarChart3 className="w-5 h-5" />
+          Расшифровка
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-2xl max-h-[80vh] overflow-y-auto overflow-x-hidden rounded-lg p-4 sm:p-6">

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { LocalStorage, validateWord, shuffleArray } from "@/lib/storage";
+import { calculateWordEfficiency } from "@/lib/wordEfficiency";
 import type { SourceWord, FoundWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { LetterTile } from "@/components/letter-tile";
@@ -203,23 +204,45 @@ export default function Game() {
               {sourceWord.word}
             </h1>
           </div>
-          <div className="flex items-center gap-2">
-            <WordEfficiencyStatsDialog
-              sourceWord={sourceWord.word}
-              foundWords={foundWords}
-            />
-            <WordSettingsDialog
-              sourceWord={sourceWord}
-              foundWords={foundWords}
-              onDeleteWord={handleDeleteSourceWord}
-              onImportWords={handleImportWords}
-            />
-          </div>
+          <WordSettingsDialog
+            sourceWord={sourceWord}
+            foundWords={foundWords}
+            onDeleteWord={handleDeleteSourceWord}
+            onImportWords={handleImportWords}
+          />
         </div>
       </header>
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-2 py-3 sm:px-4 sm:py-6 space-y-4 sm:space-y-6">
+          {/* Efficiency Card */}
+          {(() => {
+            const metrics = calculateWordEfficiency(sourceWord.word, foundWords);
+            return (
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                      Эффективность
+                    </h2>
+                    <WordEfficiencyStatsDialog
+                      sourceWord={sourceWord.word}
+                      foundWords={foundWords}
+                    />
+                  </div>
+                  <div className="flex items-start justify-center gap-8">
+                    <Badge variant="outline" title="K1" className="font-mono">
+                      K1={metrics.k1.toFixed(2)}
+                    </Badge>
+                    <Badge variant="outline" title="K2" className="font-mono">
+                      K2={metrics.k2.toFixed(2)}
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
+
           {/* Letter Manipulation Bar */}
           <Card>
             <CardContent className="p-3 sm:p-6">
