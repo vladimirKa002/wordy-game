@@ -161,8 +161,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 py-6">
-        <header className="flex flex-col gap-2 mb-8">
-          <div className="flex flex-row items-center justify-between gap-1">
+        <header className="flex flex-col gap-2 mb-4">
+          <div className="flex flex-row items-center justify-between">
             <h1 className="text-3xl font-bold text-foreground">Поиск слов</h1>
             <div className="flex gap-2">
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
