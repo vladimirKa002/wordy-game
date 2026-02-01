@@ -275,27 +275,27 @@ export default function Home() {
                 data-testid={`card-source-${sourceWord.id}`}
               >
                 <Link href={`/game/${sourceWord.id}`}>
-                  <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 gap-2">
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <h3 className="text-xl font-semibold tracking-wide font-mono">
-                        {sourceWord.word}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
-                      </p>
-                    </div>
+                  <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2 gap-2">
+                    <h3 className="text-xl font-semibold tracking-wide font-mono">
+                      {sourceWord.word}
+                    </h3>
                     <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
                       {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
                     </Badge>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-start justify-start gap-2">
-                      <Badge variant="outline" title="K1" className="font-mono">
-                        K1={metrics.k1.toFixed(2)}
-                      </Badge>
-                      <Badge variant="outline" title="K2" className="font-mono">
-                        K2={metrics.k2.toFixed(2)}
-                      </Badge>
+                    <div className="flex flex-col items-start justify-start gap-2">
+                      <p className="text-sm text-muted-foreground">
+                        {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
+                      </p>
+                      <div className="flex items-start justify-start gap-2">
+                        <Badge variant="outline" title="K1" className="font-mono">
+                          {metrics.k1.toFixed(2)}
+                        </Badge>
+                        <Badge variant="outline" title="K2" className="font-mono">
+                          {metrics.k2.toFixed(2)}
+                        </Badge>
+                      </div>
                     </div>
                   </CardContent>
                 </Link>

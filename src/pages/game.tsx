@@ -232,10 +232,10 @@ export default function Game() {
                   </div>
                   <div className="flex items-start justify-start gap-2">
                     <Badge variant="outline" title="K1" className="font-mono">
-                      K1={metrics.k1.toFixed(2)}
+                      {metrics.k1.toFixed(2)}
                     </Badge>
                     <Badge variant="outline" title="K2" className="font-mono">
-                      K2={metrics.k2.toFixed(2)}
+                      {metrics.k2.toFixed(2)}
                     </Badge>
                   </div>
                 </CardContent>
