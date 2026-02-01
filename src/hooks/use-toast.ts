@@ -137,9 +137,9 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id"> & { duration?: number; variant?: "default" | "destructive" | "warning" }
+type Toast = Omit<ToasterToast, "id"> & { variant?: "default" | "destructive" | "warning" }
 
-function toast({ duration, ...props }: Toast) {
+function toast({ ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -162,8 +162,7 @@ function toast({ duration, ...props }: Toast) {
   })
 
   // Auto-dismiss after specified duration
-  const delayDuration = duration ?? TOAST_REMOVE_DELAY
-  if (delayDuration > 0) {
+  if (TOAST_REMOVE_DELAY > 0) {
     addToRemoveQueue(id)
   }
 

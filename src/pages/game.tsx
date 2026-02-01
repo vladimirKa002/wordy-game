@@ -11,6 +11,7 @@ import type { SourceWord, FoundWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { LetterTile } from "@/components/letter-tile";
 import { FoundWordsList } from "@/components/found-words-list";
+import { WordSettingsDialog } from "@/components/word-settings-dialog";
 
 export default function Game() {
   const [, params] = useRoute("/game/:id");
@@ -56,7 +57,6 @@ export default function Game() {
         variant: "warning",
         title: "Уже найдено",
         description: `Вы уже нашли "${trimmed}"`,
-        duration: 3000,
       });
       setInputWord("");
       inputRef.current?.focus();
@@ -71,7 +71,6 @@ export default function Game() {
         variant: "warning",
         title: "Недопустимое слово",
         description: validation.error,
-        duration: 3000,
       });
       inputRef.current?.focus();
       return;
@@ -89,7 +88,6 @@ export default function Game() {
     toast({
       title: "Слово найдено!",
       description: `"${trimmed}" добавлено в список`,
-      duration: 3000,
     });
 
     // Switch to the tab for this word's first letter
@@ -106,8 +104,17 @@ export default function Game() {
     toast({
       title: "Удалено",
       description: `"${word}" было удалено`,
-      duration: 3000,
     });
+  };
+
+  const handleDeleteSourceWord = (id: string) => {
+    LocalStorage.deleteSourceWord(id);
+    window.location.href = "/#/";
+  };
+
+  const handleImportWords = (newWords: FoundWord[]) => {
+    LocalStorage.addFoundWords(newWords);
+    setFoundWords([...foundWords, ...newWords]);
   };
 
   const handleDragStart = (index: number) => {
@@ -195,7 +202,12 @@ export default function Game() {
               {sourceWord.word}
             </h1>
           </div>
-          <div className="w-9" />
+          <WordSettingsDialog
+            sourceWord={sourceWord}
+            foundWords={foundWords}
+            onDeleteWord={handleDeleteSourceWord}
+            onImportWords={handleImportWords}
+          />
         </div>
       </header>
 

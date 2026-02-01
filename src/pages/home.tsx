@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { DeleteDialog } from "@/components/delete-dialog";
 import { LocalStorage } from "@/lib/storage";
 import type { SourceWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -16,8 +15,6 @@ export default function Home() {
   const [sourceWords, setSourceWords] = useState<SourceWord[]>(() => LocalStorage.getSourceWords());
   const [newWord, setNewWord] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [deleteDialogWord, setDeleteDialogWord] = useState<[string, string]>();
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { toast } = useToast();
 
@@ -58,15 +55,6 @@ export default function Home() {
     toast({
       title: "Исходное слово добавлено!",
       description: `"${trimmed}" готово к игре`,
-    });
-  };
-
-  const handleDelete = (id: string, word: string) => {
-    LocalStorage.deleteSourceWord(id);
-    setSourceWords(sourceWords.filter(w => w.id !== id));
-    toast({
-      title: "Удалено",
-      description: `"${word}" было удалено`,
     });
   };
 
@@ -172,20 +160,6 @@ export default function Home() {
                       <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
                         {getFoundWordCount(sourceWord.id)} {getFoundWordCount(sourceWord.id) === 1 ? 'слово' : getFoundWordCount(sourceWord.id) > 1 && getFoundWordCount(sourceWord.id) < 5 ? 'слова' : 'слов'}
                       </Badge>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setDeleteDialogOpen(true);
-                          setDeleteDialogWord([sourceWord.id, sourceWord.word]);
-                        }}
-                        data-testid={`button-delete-${sourceWord.id}`}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -196,14 +170,6 @@ export default function Home() {
                 </Link>
               </Card>
             ))}
-            <DeleteDialog
-              dialogOpen={deleteDialogOpen}
-              setDialogOpen={setDeleteDialogOpen}
-              title="Удалить"
-              description={`Вы уверены, что хотите удалить слово "${deleteDialogWord?.[1]}"?`}
-              onConfirm={() => handleDelete(deleteDialogWord![0], deleteDialogWord![1])}
-              onCancel={()=>{}}
-            />
           </div>
         )}
       </div>

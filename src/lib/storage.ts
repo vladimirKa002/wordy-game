@@ -63,6 +63,12 @@ export class LocalStorage {
     const foundWords = this.getFoundWords().filter(w => w.id !== id);
     localStorage.setItem(STORAGE_KEYS.FOUND_WORDS, JSON.stringify(foundWords));
   }
+
+  static addFoundWords(words: FoundWord[]): void {
+    const foundWords = this.getFoundWords();
+    foundWords.push(...words);
+    localStorage.setItem(STORAGE_KEYS.FOUND_WORDS, JSON.stringify(foundWords));
+  }
 }
 
 // Word validation utilities
