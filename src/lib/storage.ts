@@ -66,7 +66,7 @@ export class LocalStorage {
 }
 
 // Word validation utilities
-export const validateWord = (word: string, sourceWord: string): { valid: boolean; error?: string } => {
+export const validateWord = (word: string, sourceWord: string): { valid: boolean; error?: string; extraLetters?: string } => {
   const normalizedWord = word.toLowerCase().trim();
   const normalizedSource = sourceWord.toLowerCase();
 
@@ -77,14 +77,26 @@ export const validateWord = (word: string, sourceWord: string): { valid: boolean
   // Check if all letters in the word exist in the source word
   const sourceLetters = normalizedSource.split('');
   const wordLetters = normalizedWord.split('');
+  const usedLetters: string[] = [];
 
   for (const letter of wordLetters) {
     const indexInSource = sourceLetters.indexOf(letter);
     if (indexInSource === -1) {
-      return { valid: false, error: "Слово содержит буквы, которых нет в исходном слове" };
+      // Find extra letters for better error message
+      const extraLetters = wordLetters
+        .filter(l => !normalizedSource.includes(l) && !usedLetters.includes(l))
+        .join(', ')
+        .toUpperCase();
+      
+      return { 
+        valid: false, 
+        error: `Слово содержит лишние буквы: ${extraLetters}`,
+        extraLetters
+      };
     }
     // Remove the used letter to prevent reusing the same letter instance
     sourceLetters.splice(indexInSource, 1);
+    usedLetters.push(letter);
   }
 
   return { valid: true };

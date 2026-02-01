@@ -6,7 +6,7 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 2000
 
 type ToasterToast = ToastProps & {
   id: string
@@ -137,9 +137,9 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+type Toast = Omit<ToasterToast, "id"> & { duration?: number; variant?: "default" | "destructive" | "warning" }
 
-function toast({ ...props }: Toast) {
+function toast({ duration, ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -160,6 +160,12 @@ function toast({ ...props }: Toast) {
       },
     },
   })
+
+  // Auto-dismiss after specified duration
+  const delayDuration = duration ?? TOAST_REMOVE_DELAY
+  if (delayDuration > 0) {
+    addToRemoveQueue(id)
+  }
 
   return {
     id: id,

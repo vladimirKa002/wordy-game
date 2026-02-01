@@ -1,6 +1,6 @@
-import { useState, useEffect, type DragEvent } from "react";
+import { useState, useEffect, useRef, type DragEvent } from "react";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Shuffle, Plus } from "lucide-react";
+import { ArrowLeft, Shuffle, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,6 +23,7 @@ export default function Game() {
   const [inputWord, setInputWord] = useState("");
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!sourceWordId) return;
@@ -52,11 +53,13 @@ export default function Game() {
     // Check if already found
     if (LocalStorage.hasFoundWord(sourceWord.id, trimmed)) {
       toast({
-        variant: "destructive",
+        variant: "warning",
         title: "Уже найдено",
         description: `Вы уже нашли "${trimmed}"`,
+        duration: 3000,
       });
       setInputWord("");
+      inputRef.current?.focus();
       return;
     }
 
@@ -65,10 +68,12 @@ export default function Game() {
     
     if (!validation.valid) {
       toast({
-        variant: "destructive",
+        variant: "warning",
         title: "Недопустимое слово",
         description: validation.error,
+        duration: 3000,
       });
+      inputRef.current?.focus();
       return;
     }
 
@@ -84,11 +89,15 @@ export default function Game() {
     toast({
       title: "Слово найдено!",
       description: `"${trimmed}" добавлено в список`,
+      duration: 3000,
     });
 
     // Switch to the tab for this word's first letter
     const firstLetter = trimmed[0];
     setActiveTab(firstLetter);
+    
+    // Focus the input field for continuous typing
+    inputRef.current?.focus();
   };
   
   const handleDeleteWord = (id: string, word: string) => {
@@ -97,6 +106,7 @@ export default function Game() {
     toast({
       title: "Удалено",
       description: `"${word}" было удалено`,
+      duration: 3000,
     });
   };
 
@@ -232,24 +242,45 @@ export default function Game() {
                 Добавить новое слово
               </h2>
               <div className="flex gap-2">
-                <Input
-                  value={inputWord}
-                  onChange={(e) => setInputWord(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleAddWord();
-                    }
-                  }}
-                  placeholder="Введите слово..."
-                  className="text-lg font-medium"
-                  data-testid="input-word"
-                />
+                <div className="relative flex-1">
+                  <Input
+                    ref={inputRef}
+                    value={inputWord}
+                    onChange={(e) => {
+                      const newValue = e.target.value.toUpperCase();
+                      setInputWord(newValue);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAddWord();
+                      }
+                    }}
+                    placeholder="Введите слово..."
+                    className="text-lg font-medium pr-10"
+                    data-testid="input-word"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                  />
+                  {inputWord && (
+                    <button
+                      onClick={() => {
+                        setInputWord("");
+                        inputRef.current?.focus();
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      aria-label="Clear input"
+                      data-testid="button-clear-input"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
                 <Button 
                   onClick={handleAddWord}
                   disabled={inputWord.trim().length === 0}
                   data-testid="button-add-word"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4 mr-1" />
                   Добавить
                 </Button>
               </div>
