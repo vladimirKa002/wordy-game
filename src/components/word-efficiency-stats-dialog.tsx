@@ -20,7 +20,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
           <BarChart3 className="w-5 h-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[80vh] overflow-y-auto rounded-lg">
         <DialogHeader>
           <DialogTitle>Статистика эффективности для "{sourceWord}"</DialogTitle>
         </DialogHeader>
@@ -37,7 +37,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
               <div className="text-3xl font-bold">{metrics.sourceWordLength}</div>
             </div>
             <div className="bg-muted p-4 rounded-lg">
-              <div className="text-sm font-medium text-muted-foreground mb-1">Эффективность</div>
+              <div className="text-sm font-medium text-muted-foreground mb-1 break-words">Эффективность</div>
               <div className="text-3xl font-bold">{metrics.efficiency.toFixed(2)}</div>
             </div>
           </div>
