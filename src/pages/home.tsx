@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { LocalStorage } from "@/lib/storage";
-import { getEfficiencyScore } from "@/lib/wordEfficiency";
+import { calculateWordEfficiency } from "@/lib/wordEfficiency";
 import type { SourceWord, FoundWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
@@ -266,7 +266,7 @@ export default function Home() {
             {sourceWords.map((sourceWord) => {
               const foundWords = LocalStorage.getFoundWords(sourceWord.id);
               const wordCount = foundWords.length;
-              const efficiencyScore = getEfficiencyScore(sourceWord.word, foundWords);
+              const metrics = calculateWordEfficiency(sourceWord.word, foundWords);
               
               return (
               <Card 
@@ -284,19 +284,20 @@ export default function Home() {
                         {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
                       </p>
                     </div>
-                    <div className="flex flex-col items-end justify-start gap-1">
-                      <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
-                        {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
-                      </Badge>
-                      {wordCount > 0 && (
-                        <Badge variant="outline" title="Показатель эффективности" className="font-mono">
-                          {efficiencyScore}
-                        </Badge>
-                      )}
-                    </div>
+                    <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
+                      {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
+                    </Badge>
                   </CardHeader>
-                  {/*<CardContent>
-                  </CardContent>*/}
+                  <CardContent>
+                    <div className="flex items-start justify-start gap-2">
+                      <Badge variant="outline" title="K1" className="font-mono">
+                        K1={metrics.k1.toFixed(2)}
+                      </Badge>
+                      <Badge variant="outline" title="K2" className="font-mono">
+                        K2={metrics.k2.toFixed(2)}
+                      </Badge>
+                    </div>
+                  </CardContent>
                 </Link>
               </Card>
             );
