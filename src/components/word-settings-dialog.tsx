@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, Upload, Trash2, Settings } from "lucide-react";
+import { Download, Upload, Copy, Trash2, Settings } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { DeleteDialog } from "@/components/delete-dialog";
 import type { SourceWord, FoundWord } from "@shared/schema";
@@ -29,27 +35,117 @@ export function WordSettingsDialog({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleExport = () => {
+  const generateExportJSON = () => {
     const exportData = {
       sourceWord: sourceWord.word,
       foundWords: foundWords.map(w => w.word),
       exportedAt: new Date().toISOString(),
     };
+    return JSON.stringify(exportData, null, 2);
+  };
 
-    const jsonString = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `wordy-${sourceWord.word.toLowerCase()}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const handleExport = () => {
+    try {
+      const jsonString = generateExportJSON();
+      
+      // Add UTF-8 BOM for proper encoding in all browsers/apps
+      const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+      const blob = new Blob([bom, jsonString], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      
+      link.href = url;
+      link.download = `wordy-${sourceWord.word.toLowerCase()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup after download starts
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast({
+        title: "Экспортировано",
+        description: `Слова для "${sourceWord.word}" экспортированы`,
+      });
+
+      // Close dialog with a small delay to allow dropdown to close naturally
+      setTimeout(() => {
+        setSettingsOpen(false);
+      }, 50);
+    } catch (error) {
+      toast({
+        variant: "warning",
+        title: "Ошибка экспорта",
+        description: "Не удалось экспортировать файл",
+      });
+    }
+  };
+
+  const handleCopyToClipboard = async () => {
+    try {
+      const jsonString = generateExportJSON();
+      await navigator.clipboard.writeText(jsonString);
+      
+      toast({
+        title: "Скопировано",
+        description: "JSON скопирован в буфер обмена",
+      });
+      
+      setSettingsOpen(false);
+    } catch (error) {
+      toast({
+        variant: "warning",
+        title: "Ошибка",
+        description: "Не удалось скопировать в буфер обмена",
+      });
+    }
+  };
+
+  const processImportData = async (data: unknown) => {
+    // Validate the import data
+    if (!Array.isArray((data as any)?.foundWords) || !(data as any)?.sourceWord) {
+      toast({
+        variant: "warning",
+        title: "Ошибка импорта",
+        description: "Некорректный формат файла",
+      });
+      return;
+    }
+
+    // Verify source word matches
+    if ((data as any).sourceWord.toUpperCase() !== sourceWord.word.toUpperCase()) {
+      toast({
+        variant: "warning",
+        title: "Ошибка импорта",
+        description: `Исходное слово в файле (${(data as any).sourceWord}) не совпадает с текущим (${sourceWord.word})`,
+      });
+      return;
+    }
+
+    // Import the words
+    const newWords: FoundWord[] = (data as any).foundWords
+      .filter((word: string) => !foundWords.some(fw => fw.word.toUpperCase() === word.toUpperCase()))
+      .map((word: string) => ({
+        id: crypto.randomUUID(),
+        sourceWordId: sourceWord.id,
+        word: word.toUpperCase(),
+        foundAt: Date.now(),
+      }));
+
+    if (newWords.length === 0) {
+      toast({
+        title: "Нет новых слов",
+        description: "Все слова из файла уже добавлены",
+      });
+      setSettingsOpen(false);
+      return;
+    }
+
+    onImportWords(newWords);
 
     toast({
-      title: "Экспортировано",
-      description: `Слова для "${sourceWord.word}" экспортированы`,
+      title: "Импортировано",
+      description: `Добавлено ${newWords.length} новых слов для "${sourceWord.word}"`,
     });
 
     setSettingsOpen(false);
@@ -67,54 +163,7 @@ export function WordSettingsDialog({
       try {
         const text = await file.text();
         const data = JSON.parse(text);
-
-        // Validate the import data
-        if (!Array.isArray(data.foundWords) || !data.sourceWord) {
-          toast({
-            variant: "warning",
-            title: "Ошибка импорта",
-            description: "Некорректный формат файла",
-          });
-          return;
-        }
-
-        // Verify source word matches
-        if (data.sourceWord.toUpperCase() !== sourceWord.word.toUpperCase()) {
-          toast({
-            variant: "warning",
-            title: "Ошибка импорта",
-            description: `Исходное слово в файле (${data.sourceWord}) не совпадает с текущим (${sourceWord.word})`,
-          });
-          return;
-        }
-
-        // Import the words
-        const newWords = data.foundWords
-          .filter((word: string) => !foundWords.some(fw => fw.word.toUpperCase() === word.toUpperCase()))
-          .map((word: string) => ({
-            id: crypto.randomUUID(),
-            sourceWordId: sourceWord.id,
-            word: word.toUpperCase(),
-            foundAt: Date.now(),
-          }));
-
-        if (newWords.length === 0) {
-          toast({
-            title: "Нет новых слов",
-            description: "Все слова из файла уже добавлены",
-          });
-          setSettingsOpen(false);
-          return;
-        }
-
-        onImportWords(newWords);
-
-        toast({
-          title: "Импортировано",
-          description: `Добавлено ${newWords.length} новых слов для "${sourceWord.word}"`,
-        });
-
-        setSettingsOpen(false);
+        await processImportData(data);
       } catch (error) {
         toast({
           variant: "warning",
@@ -125,6 +174,20 @@ export function WordSettingsDialog({
     };
 
     input.click();
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const data = JSON.parse(text);
+      await processImportData(data);
+    } catch (error) {
+      toast({
+        variant: "warning",
+        title: "Ошибка",
+        description: "Не удалось прочитать буфер обмена. Убедитесь, что скопирован корректный JSON.",
+      });
+    }
   };
 
   const handleDelete = () => {
@@ -147,42 +210,68 @@ export function WordSettingsDialog({
 
           <div className="space-y-3 pt-4">
             {/* Export Button */}
-            <Button
-              onClick={handleExport}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto py-3"
-              data-testid="button-export-words"
-            >
-              <Download className="w-4 h-4 flex-shrink-0" />
-              <div className="text-left">
-                <div className="font-medium">Экспортировать</div>
-                <div className="text-xs text-muted-foreground">
-                  {foundWords.length} слов
-                </div>
-              </div>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 h-auto py-3"
+                  data-testid="button-export-menu"
+                >
+                  <Download className="w-4 h-4 flex-shrink-0" />
+                  <div className="text-left">
+                    <div className="font-medium">Экспортировать</div>
+                    <div className="text-xs text-muted-foreground">
+                      {foundWords.length} слов
+                    </div>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[200px]">
+                <DropdownMenuItem onClick={handleExport}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Скачать JSON
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleCopyToClipboard}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Копировать JSON
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Import Button */}
-            <Button
-              onClick={handleImport}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto py-3"
-              data-testid="button-import-words"
-            >
-              <Upload className="w-4 h-4 flex-shrink-0" />
-              <div className="text-left">
-                <div className="font-medium">Импортировать</div>
-                <div className="text-xs text-muted-foreground">
-                  Загрузить из JSON файла
-                </div>
-              </div>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 h-auto py-3"
+                  data-testid="button-import-menu"
+                >
+                  <Upload className="w-4 h-4 flex-shrink-0" />
+                  <div className="text-left">
+                    <div className="font-medium">Импортировать</div>
+                    <div className="text-xs text-muted-foreground">
+                      Загрузить JSON
+                    </div>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[200px]">
+                <DropdownMenuItem onClick={handleImport}>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Из файла JSON
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePasteFromClipboard}>
+                  <Copy className="w-4 h-4 mr-2" />
+                  Из буфера обмена
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Delete Button */}
             <Button
               onClick={() => setDeleteDialogOpen(true)}
               variant="outline"
-              className="w-full justify-start gap-3 h-auto py-3 text-warning hover:text-warning"
+              className="w-full justify-start gap-3 h-auto py-3 text-destructive hover:text-destructive"
               data-testid="button-delete-word-settings"
             >
               <Trash2 className="w-4 h-4 flex-shrink-0" />
