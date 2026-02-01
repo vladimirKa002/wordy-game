@@ -172,9 +172,8 @@ export default function Home() {
           <div className="flex gap-2">
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="default" data-testid="button-add-word">
-                  <Plus className="w-4 h-4 mr-1" />
-                  Добавить
+                <Button size="icon" data-testid="button-add-word">
+                  <Plus className="w-4 h-4" />
                 </Button>
               </DialogTrigger>
             <DialogContent>
@@ -276,13 +275,16 @@ export default function Home() {
                 data-testid={`card-source-${sourceWord.id}`}
               >
                 <Link href={`/game/${sourceWord.id}`}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 gap-2">
-                    <div className="flex-1 min-w-0">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 gap-2">
+                    <div className="flex flex-col items-start justify-center gap-1">
                       <h3 className="text-xl font-semibold tracking-wide font-mono">
                         {sourceWord.word}
                       </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-end justify-center gap-2">
                       <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
                         {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
                       </Badge>
@@ -293,11 +295,8 @@ export default function Home() {
                       )}
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      {sourceWord.word.length} {sourceWord.word.length === 1 ? 'буква' : sourceWord.word.length > 1 && sourceWord.word.length < 5 ? 'буквы' : 'букв'} • Добавлено {new Date(sourceWord.createdAt).toLocaleDateString('ru-RU')}
-                    </p>
-                  </CardContent>
+                  {/*<CardContent>
+                  </CardContent>*/}
                 </Link>
               </Card>
             );
