@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { LetterTile } from "@/components/letter-tile";
 import { FoundWordsList } from "@/components/found-words-list";
 import { WordSettingsDialog } from "@/components/word-settings-dialog";
+import { WordEfficiencyStatsDialog } from "@/components/word-efficiency-stats-dialog";
 
 export default function Game() {
   const [, params] = useRoute("/game/:id");
@@ -202,12 +203,18 @@ export default function Game() {
               {sourceWord.word}
             </h1>
           </div>
-          <WordSettingsDialog
-            sourceWord={sourceWord}
-            foundWords={foundWords}
-            onDeleteWord={handleDeleteSourceWord}
-            onImportWords={handleImportWords}
-          />
+          <div className="flex items-center gap-2">
+            <WordEfficiencyStatsDialog
+              sourceWord={sourceWord.word}
+              foundWords={foundWords}
+            />
+            <WordSettingsDialog
+              sourceWord={sourceWord}
+              foundWords={foundWords}
+              onDeleteWord={handleDeleteSourceWord}
+              onImportWords={handleImportWords}
+            />
+          </div>
         </div>
       </header>
 

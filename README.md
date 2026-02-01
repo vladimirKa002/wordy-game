@@ -44,6 +44,18 @@ Words submitted by the player must:
 
 ---
 
+## 📊 Word Efficiency Metric
+
+The game calculates a **Word Efficiency** score for each source word, which measures how productively the source word generates found words. The metric is based on Fibonacci weighting, favoring longer derived words:
+
+**Formula**: Efficiency = K2 ÷ K1, where:
+- **K1** = Total found words ÷ Source word length (baseline ratio)
+- **K2** = (Weighted sum of found words) ÷ Source word length
+
+The weighting uses Fibonacci coefficients based on word length differences. Words that are 2 letters shorter than the source get coefficient 233, those 3 letters shorter get 144, and so on (following the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233). This encourages finding longer derived words over shorter ones. The efficiency score is displayed on the home page for quick comparison between source words, and a detailed statistics dialog in the game view shows the complete breakdown.
+
+---
+
 ## ▶️ Running the Project
 
 To run the project locally:

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { LocalStorage } from "@/lib/storage";
+import { getEfficiencyScore } from "@/lib/wordEfficiency";
 import type { SourceWord, FoundWord } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 
@@ -62,10 +63,6 @@ export default function Home() {
       title: "Исходное слово добавлено!",
       description: `"${trimmed}" готово к игре`,
     });
-  };
-
-  const getFoundWordCount = (sourceWordId: string) => {
-    return LocalStorage.getFoundWords(sourceWordId).length;
   };
 
   const processImportData = async (data: unknown) => {
@@ -267,7 +264,12 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-0">
-            {sourceWords.map((sourceWord) => (
+            {sourceWords.map((sourceWord) => {
+              const foundWords = LocalStorage.getFoundWords(sourceWord.id);
+              const wordCount = foundWords.length;
+              const efficiencyScore = getEfficiencyScore(sourceWord.word, foundWords);
+              
+              return (
               <Card 
                 key={sourceWord.id}
                 className="hover-elevate active-elevate-2 transition-all cursor-pointer group"
@@ -282,8 +284,13 @@ export default function Home() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary" data-testid={`badge-count-${sourceWord.id}`}>
-                        {getFoundWordCount(sourceWord.id)} {getFoundWordCount(sourceWord.id) === 1 ? 'слово' : getFoundWordCount(sourceWord.id) > 1 && getFoundWordCount(sourceWord.id) < 5 ? 'слова' : 'слов'}
+                        {wordCount} {wordCount === 1 ? 'слово' : wordCount > 1 && wordCount < 5 ? 'слова' : 'слов'}
                       </Badge>
+                      {wordCount > 0 && (
+                        <Badge variant="outline" title="Показатель эффективности" className="font-mono">
+                          {efficiencyScore}
+                        </Badge>
+                      )}
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -293,7 +300,8 @@ export default function Home() {
                   </CardContent>
                 </Link>
               </Card>
-            ))}
+            );
+            })}
           </div>
         )}
       </div>
