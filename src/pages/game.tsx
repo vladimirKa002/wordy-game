@@ -230,7 +230,7 @@ export default function Game() {
                       foundWords={foundWords}
                     />
                   </div>
-                  <div className="flex items-start justify-center gap-8">
+                  <div className="flex items-start justify-start gap-8">
                     <Badge variant="outline" title="K1" className="font-mono">
                       K1={metrics.k1.toFixed(2)}
                     </Badge>

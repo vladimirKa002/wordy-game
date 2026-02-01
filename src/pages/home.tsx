@@ -275,7 +275,7 @@ export default function Home() {
                 data-testid={`card-source-${sourceWord.id}`}
               >
                 <Link href={`/game/${sourceWord.id}`}>
-                  <CardHeader className="flex flex-row items-center justify-start space-y-0 pb-4 gap-2">
+                  <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4 gap-2">
                     <div className="flex flex-col items-start justify-center gap-1">
                       <h3 className="text-xl font-semibold tracking-wide font-mono">
                         {sourceWord.word}
