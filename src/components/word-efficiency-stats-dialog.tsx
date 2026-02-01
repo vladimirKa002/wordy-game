@@ -27,7 +27,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
         
         <div className="space-y-6">
           {/* Main Metrics */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-muted p-4 rounded-lg">
               <div className="text-sm font-medium text-muted-foreground mb-1">Найдено слов</div>
               <div className="text-3xl font-bold">{metrics.totalWords}</div>
@@ -46,7 +46,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
           <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg space-y-3">
             <div>
               <div className="text-sm font-mono text-muted-foreground mb-1">K1 (базовый коэффициент):</div>
-              <div className="text-lg font-mono">{metrics.totalWords} ÷ {metrics.sourceWordLength} = {metrics.k1.toFixed(2)}</div>
+              <div className="text-lg font-mono break-words overflow-x-auto">{metrics.totalWords} ÷ {metrics.sourceWordLength} = {metrics.k1.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Количество найденных слов, приходящихся на одну букву исходного слова
               </p>
@@ -54,7 +54,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
             
             <div>
               <div className="text-sm font-mono text-muted-foreground mb-1">K2 (взвешенный коэффициент):</div>
-              <div className="text-lg font-mono">{metrics.weightedSum} ÷ {metrics.sourceWordLength} = {metrics.k2.toFixed(2)}</div>
+              <div className="text-lg font-mono break-words overflow-x-auto">{metrics.weightedSum} ÷ {metrics.sourceWordLength} = {metrics.k2.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Взвешенная сумма слов (с коэффициентами Фибоначчи) деленная на длину исходного слова
               </p>
@@ -62,7 +62,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
 
             <div>
               <div className="text-sm font-mono text-muted-foreground mb-1">Эффективность (К2 ÷ К1):</div>
-              <div className="text-lg font-mono">{metrics.k2.toFixed(2)} ÷ {metrics.k1.toFixed(2)} = {metrics.efficiency.toFixed(2)}</div>
+              <div className="text-lg font-mono break-words overflow-x-auto">{metrics.k2.toFixed(2)} ÷ {metrics.k1.toFixed(2)} = {metrics.efficiency.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Коэффициент эффективности для данного исходного слова
               </p>
@@ -73,7 +73,7 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
           {metrics.breakdown.length > 0 && (
             <div>
               <h3 className="text-sm font-semibold mb-3">Разбор по длинам слов:</h3>
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
