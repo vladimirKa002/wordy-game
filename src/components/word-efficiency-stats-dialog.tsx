@@ -101,6 +101,69 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
             </div>
           )}
 
+          {/* Scrabble Score Section */}
+          <div className="bg-green-50 dark:bg-green-950 p-3 sm:p-4 rounded-lg space-y-3">
+            <div className="text-center mb-3">
+              <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">Эрудит-рейтинг (Scrabble)</div>
+              <div className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300">{metrics.scrabbleScore}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Общая сумма очков по системе Эрудит
+              </p>
+            </div>
+
+            {metrics.scrabbleBreakdown.length > 0 && (
+              <div className="border rounded-lg overflow-hidden overflow-y-auto max-h-48">
+                <Table className="text-xs">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="px-2 sm:px-3 py-2">Слово</TableHead>
+                      <TableHead className="text-right px-2 sm:px-3 py-2">Очки</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {metrics.scrabbleBreakdown.slice(0, 10).map((row, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell className="font-mono px-2 sm:px-3 py-2">{row.word}</TableCell>
+                        <TableCell className="font-mono text-right px-2 sm:px-3 py-2 font-semibold">{row.score}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+
+          {/* Letter Scores Reference */}
+          <div className="bg-purple-50 dark:bg-purple-950 p-3 sm:p-4 rounded-lg space-y-2">
+            <h4 className="text-xs sm:text-sm font-semibold mb-2">Таблица очков (Русский/English):</h4>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <p className="font-semibold mb-1">1 очко:</p>
+                <p className="break-words">А Е И О / A E I O U L N S T R</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">2 очка:</p>
+                <p className="break-words">В К Л М Н П Р С Т / D G</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">3 очка:</p>
+                <p className="break-words">Б Г Д Ё Й У Я / B C M P</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">5 очков:</p>
+                <p className="break-words">Ж З Х Ч Ь Ы / F H V W Y K</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">10 очков:</p>
+                <p className="break-words">Ф Ц Ш Щ Ю Э / J X Q Z</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-1">15 очков:</p>
+                <p className="break-words">Ъ</p>
+              </div>
+            </div>
+          </div>
+
           {/* Note */}
           <div className="bg-yellow-50 dark:bg-yellow-950 p-2 sm:p-3 rounded-lg text-xs text-muted-foreground">
             <p className="break-words">

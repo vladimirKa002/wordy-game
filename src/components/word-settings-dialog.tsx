@@ -64,17 +64,16 @@ export function WordSettingsDialog({
       URL.revokeObjectURL(url);
 
       toast({
+        variant: "import_success",
         title: "Экспортировано",
         description: `Слова для "${sourceWord.word}" экспортированы`,
       });
 
-      // Close dialog with a small delay to allow dropdown to close naturally
-      setTimeout(() => {
-        setSettingsOpen(false);
-      }, 50);
+      // Close dialog after current event loop - universal solution for all platforms
+      Promise.resolve().then(() => setSettingsOpen(false));
     } catch (error) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка экспорта",
         description: "Не удалось экспортировать файл",
       });
@@ -87,14 +86,16 @@ export function WordSettingsDialog({
       await navigator.clipboard.writeText(jsonString);
       
       toast({
+        variant: "import_success",
         title: "Скопировано",
         description: "JSON скопирован в буфер обмена",
       });
       
-      setSettingsOpen(false);
+      // Close dialog after current event loop - universal solution for all platforms
+      Promise.resolve().then(() => setSettingsOpen(false));
     } catch (error) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка",
         description: "Не удалось скопировать в буфер обмена",
       });
@@ -105,7 +106,7 @@ export function WordSettingsDialog({
     // Validate the import data
     if (!Array.isArray((data as any)?.foundWords) || !(data as any)?.sourceWord) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка импорта",
         description: "Некорректный формат файла",
       });
@@ -115,7 +116,7 @@ export function WordSettingsDialog({
     // Verify source word matches
     if ((data as any).sourceWord.toUpperCase() !== sourceWord.word.toUpperCase()) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка импорта",
         description: `Исходное слово в файле (${(data as any).sourceWord}) не совпадает с текущим (${sourceWord.word})`,
       });
@@ -134,21 +135,25 @@ export function WordSettingsDialog({
 
     if (newWords.length === 0) {
       toast({
+        variant: "import_error",
         title: "Нет новых слов",
         description: "Все слова из файла уже добавлены",
       });
-      setSettingsOpen(false);
+      // Close dialog after current event loop - universal solution for all platforms
+      Promise.resolve().then(() => setSettingsOpen(false));
       return;
     }
 
     onImportWords(newWords);
 
     toast({
+      variant: "import_success",
       title: "Импортировано",
       description: `Добавлено ${newWords.length} новых слов для "${sourceWord.word}"`,
     });
 
-    setSettingsOpen(false);
+    // Close dialog after current event loop - universal solution for all platforms
+    Promise.resolve().then(() => setSettingsOpen(false));
   };
 
   const handleImport = async () => {
@@ -162,11 +167,13 @@ export function WordSettingsDialog({
 
       try {
         const text = await file.text();
-        const data = JSON.parse(text);
+        // Strip BOM (Byte Order Mark) if present - fixes Android import issues
+        const cleanText = text.replace(/^\uFEFF/, '');
+        const data = JSON.parse(cleanText);
         await processImportData(data);
       } catch (error) {
         toast({
-          variant: "warning",
+        variant: "import_error",
           title: "Ошибка импорта",
           description: "Не удалось прочитать файл",
         });
@@ -179,11 +186,13 @@ export function WordSettingsDialog({
   const handlePasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      const data = JSON.parse(text);
+      // Strip BOM (Byte Order Mark) if present - fixes potential parsing issues
+      const cleanText = text.replace(/^\uFEFF/, '');
+      const data = JSON.parse(cleanText);
       await processImportData(data);
     } catch (error) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка",
         description: "Не удалось прочитать буфер обмена. Убедитесь, что скопирован корректный JSON.",
       });
@@ -192,7 +201,8 @@ export function WordSettingsDialog({
 
   const handleDelete = () => {
     onDeleteWord(sourceWord.id);
-    setSettingsOpen(false);
+    // Close dialog after current event loop - universal solution for all platforms
+    Promise.resolve().then(() => setSettingsOpen(false));
   };
 
   return (

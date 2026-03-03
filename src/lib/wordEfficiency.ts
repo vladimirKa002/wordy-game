@@ -6,6 +6,27 @@ const FIBONACCI_SEQUENCE = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233];
 // Maximum source word length
 const MAX_WORD_LENGTH = 20;
 
+// Scrabble-style scoring for Russian letters (Эрудит)
+const RUSSIAN_LETTER_SCORES: Record<string, number> = {
+  А: 1, Е: 1, И: 1, О: 1,
+  В: 2, К: 2, Л: 2, М: 2, Н: 2, П: 2, Р: 2, С: 2, Т: 2,
+  Б: 3, Г: 3, Д: 3, Ё: 3, Й: 3, У: 3, Я: 3,
+  Ж: 5, З: 5, Х: 5, Ч: 5, Ь: 5, Ы: 5,
+  Ф: 10, Ц: 10, Ш: 10, Щ: 10, Ю: 10, Э: 10,
+  Ъ: 15,
+};
+
+// Scrabble-style scoring for English letters
+const ENGLISH_LETTER_SCORES: Record<string, number> = {
+  A: 1, E: 1, I: 1, O: 1, U: 1, L: 1, N: 1, S: 1, T: 1, R: 1,
+  D: 2, G: 2,
+  B: 3, C: 3, M: 3, P: 3,
+  F: 4, H: 4, V: 4, W: 4, Y: 4,
+  K: 5,
+  J: 8, X: 8,
+  Q: 10, Z: 10,
+};
+
 interface WordEfficiencyMetrics {
   totalWords: number;
   sourceWordLength: number;
@@ -13,11 +34,33 @@ interface WordEfficiencyMetrics {
   weightedSum: number; // Sum of words * fibonacci coefficients
   k2: number; // Weighted words per letter
   efficiency: number; // k2 / k1 efficiency coefficient
+  scrabbleScore: number; // Total Scrabble-style score of all found words
   breakdown: {
     length: number;
     count: number;
     coefficient: number;
   }[];
+  scrabbleBreakdown: {
+    word: string;
+    score: number;
+  }[];
+}
+
+/**
+ * Calculate Scrabble-style score for a single word.
+ * Detects language (Russian or English) based on characters.
+ */
+function calculateWordScore(word: string): number {
+  let score = 0;
+  for (const letter of word) {
+    const upperLetter = letter.toUpperCase();
+    if (RUSSIAN_LETTER_SCORES[upperLetter]) {
+      score += RUSSIAN_LETTER_SCORES[upperLetter];
+    } else if (ENGLISH_LETTER_SCORES[upperLetter]) {
+      score += ENGLISH_LETTER_SCORES[upperLetter];
+    }
+  }
+  return score;
 }
 
 /**
@@ -91,6 +134,22 @@ export function calculateWordEfficiency(
   // Efficiency: k2 / k1
   const efficiency = k1 > 0 ? k2 / k1 : 0;
 
+  // Calculate total Scrabble score
+  let scrabbleScore = 0;
+  const scrabbleBreakdown: WordEfficiencyMetrics["scrabbleBreakdown"] = [];
+  
+  for (const found of foundWords) {
+    const wordScore = calculateWordScore(found.word);
+    scrabbleScore += wordScore;
+    scrabbleBreakdown.push({
+      word: found.word,
+      score: wordScore,
+    });
+  }
+
+  // Sort breakdown by score (descending)
+  scrabbleBreakdown.sort((a, b) => b.score - a.score);
+
   return {
     totalWords: W,
     sourceWordLength: N,
@@ -98,7 +157,9 @@ export function calculateWordEfficiency(
     weightedSum,
     k2: Math.round(k2 * 100) / 100, // Round to 2 decimals
     efficiency: Math.round(efficiency * 100) / 100, // Round to 2 decimals
+    scrabbleScore,
     breakdown,
+    scrabbleBreakdown,
   };
 }
 

@@ -44,15 +44,42 @@ Words submitted by the player must:
 
 ---
 
-## 📊 Word Efficiency Metric
+## 📊 Word Efficiency Metrics
 
-The game calculates a **Word Efficiency** score for each source word, which measures how productively the source word generates found words. The metric is based on Fibonacci weighting, favoring longer derived words:
+The game calculates multiple efficiency scores for each source word:
+
+### Fibonacci-Based Efficiency
+
+Measures how productively the source word generates found words based on word length weighting:
 
 **Formula**: Efficiency = K2 ÷ K1, where:
 - **K1** = Total found words ÷ Source word length (baseline ratio)
 - **K2** = (Weighted sum of found words) ÷ Source word length
 
-The weighting uses Fibonacci coefficients based on word length differences. Words that are 2 letters shorter than the source get coefficient 233, those 3 letters shorter get 144, and so on (following the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233). This encourages finding longer derived words over shorter ones. The efficiency score is displayed on the home page for quick comparison between source words, and a detailed statistics dialog in the game view shows the complete breakdown.
+The weighting uses Fibonacci coefficients based on word length differences. Words that are 2 letters shorter than the source get coefficient 233, those 3 letters shorter get 144, and so on (following the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233). This encourages finding longer derived words over shorter ones.
+
+### Scrabble-Style Score (Эрудит)
+
+Each found word receives points based on letter values, similar to the board game Scrabble. This metric rewards finding words with high-value letters.
+
+**Russian Letter Values:**
+- 1 point: А Е И О
+- 2 points: В К Л М Н П Р С Т
+- 3 points: Б Г Д Ё Й У Я
+- 5 points: Ж З Х Ч Ь Ы
+- 10 points: Ф Ц Ш Щ Ю Э
+- 15 points: Ъ
+
+**English Letter Values:**
+- 1 point: A E I O U L N S T R
+- 2 points: D G
+- 3 points: B C M P
+- 4 points: F H V W Y
+- 5 points: K
+- 8 points: J X
+- 10 points: Q Z
+
+The total Scrabble score appears on the home page and in detailed statistics, and the game supports both Russian and English words simultaneously.
 
 ---
 

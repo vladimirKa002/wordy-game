@@ -32,6 +32,20 @@ const toastVariants = cva(
           "destructive group border-destructive bg-destructive text-destructive-foreground",
         warning:
           "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200",
+        success:
+          "border-green-200 bg-green-50 text-green-900 dark:border-green-800 dark:bg-green-900/20 dark:text-green-200",
+        error_letter:
+          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
+        error_repeat:
+          "border-pink-200 bg-pink-50 text-pink-900 dark:border-pink-800 dark:bg-pink-900/20 dark:text-pink-200",
+        export_success:
+          "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200",
+        import_success:
+          "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200",
+        export_error:
+          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
+        import_error:
+          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
       },
     },
     defaultVariants: {
@@ -77,7 +91,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600 group-[.warning]:text-amber-600/50 group-[.warning]:hover:text-amber-900 group-[.warning]:focus:ring-amber-400 group-[.warning]:focus:ring-offset-amber-50",
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600 group-[.warning]:text-amber-600/50 group-[.warning]:hover:text-amber-900 group-[.warning]:focus:ring-amber-400 group-[.warning]:focus:ring-offset-amber-50 group-[.success]:text-green-600/50 group-[.success]:hover:text-green-900 group-[.success]:focus:ring-green-400 group-[.success]:focus:ring-offset-green-50 group-[.error_letter]:text-orange-600/50 group-[.error_letter]:hover:text-orange-900 group-[.error_letter]:focus:ring-orange-400 group-[.error_letter]:focus:ring-offset-orange-50 group-[.error_repeat]:text-pink-600/50 group-[.error_repeat]:hover:text-pink-900 group-[.error_repeat]:focus:ring-pink-400 group-[.error_repeat]:focus:ring-offset-pink-50 group-[.import_success]:text-blue-600/50 group-[.import_success]:hover:text-blue-900 group-[.import_success]:focus:ring-blue-400 group-[.import_success]:focus:ring-offset-blue-50 group-[.import_error]:text-orange-600/50 group-[.import_error]:hover:text-orange-900 group-[.import_error]:focus:ring-orange-400 group-[.import_error]:focus:ring-offset-orange-50",
       className
     )}
     toast-close=""

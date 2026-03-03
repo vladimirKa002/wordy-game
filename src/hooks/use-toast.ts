@@ -137,7 +137,7 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id"> & { variant?: "default" | "destructive" | "warning" }
+type Toast = Omit<ToasterToast, "id"> & { variant?: "default" | "destructive" | "warning" | "success" | "error_letter" | "error_repeat" | "export_success" | "import_success" | "export_error" | "import_error" }
 
 function toast({ ...props }: Toast) {
   const id = genId()

@@ -60,6 +60,7 @@ export default function Home() {
     setNewWord("");
     setDialogOpen(false);
     toast({
+      variant: "success",
       title: "Исходное слово добавлено!",
       description: `"${trimmed}" готово к игре`,
     });
@@ -69,7 +70,7 @@ export default function Home() {
     // Validate the import data
     if (!Array.isArray((data as any)?.foundWords) || !(data as any)?.sourceWord) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка импорта",
         description: "Некорректный формат файла",
       });
@@ -87,6 +88,7 @@ export default function Home() {
       setSourceWords([...sourceWords, targetWord]);
       
       toast({
+        variant: "import_success",
         title: "Исходное слово создано",
         description: `Создано слово "${sourceWordUpper}"`,
       });
@@ -105,6 +107,7 @@ export default function Home() {
 
     if (newWords.length === 0) {
       toast({
+        variant: "import_error",
         title: "Нет новых слов",
         description: "Все слова из файла уже добавлены",
       });
@@ -114,6 +117,7 @@ export default function Home() {
     LocalStorage.addFoundWords(newWords);
 
     toast({
+      variant: "import_success",
       title: "Импортировано",
       description: `Добавлено ${newWords.length} слов для "${sourceWordUpper}"`,
     });
@@ -130,11 +134,13 @@ export default function Home() {
 
       try {
         const text = await file.text();
-        const data = JSON.parse(text);
+        // Strip BOM (Byte Order Mark) if present - fixes Android import issues
+        const cleanText = text.replace(/^\uFEFF/, '');
+        const data = JSON.parse(cleanText);
         await processImportData(data);
       } catch (error) {
         toast({
-          variant: "warning",
+          variant: "import_error",
           title: "Ошибка импорта",
           description: "Не удалось прочитать файл",
         });
@@ -147,11 +153,13 @@ export default function Home() {
   const handlePasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      const data = JSON.parse(text);
+      // Strip BOM (Byte Order Mark) if present - fixes potential parsing issues
+      const cleanText = text.replace(/^\uFEFF/, '');
+      const data = JSON.parse(cleanText);
       await processImportData(data);
     } catch (error) {
       toast({
-        variant: "warning",
+        variant: "import_error",
         title: "Ошибка",
         description: "Не удалось прочитать буфер обмена. Убедитесь, что скопирован корректный JSON.",
       });
@@ -293,6 +301,9 @@ export default function Home() {
                         </Badge>
                         <Badge variant="outline" title="K2" className="font-mono">
                           {metrics.k2.toFixed(2)}
+                        </Badge>
+                        <Badge variant="outline" title="Score" className="font-mono">
+                          {metrics.scrabbleScore}
                         </Badge>
                       </div>
                     </div>

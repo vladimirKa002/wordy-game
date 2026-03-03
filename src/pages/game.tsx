@@ -56,7 +56,7 @@ export default function Game() {
     // Check if already found
     if (LocalStorage.hasFoundWord(sourceWord.id, trimmed)) {
       toast({
-        variant: "warning",
+        variant: "error_repeat",
         title: "Уже найдено",
         description: `Вы уже нашли "${trimmed}"`,
       });
@@ -70,7 +70,7 @@ export default function Game() {
     
     if (!validation.valid) {
       toast({
-        variant: "warning",
+        variant: validation.error?.includes("лишние") ? "error_letter" : "warning",
         title: "Недопустимое слово",
         description: validation.error,
       });
@@ -88,6 +88,7 @@ export default function Game() {
     setInputWord("");
     
     toast({
+      variant: "success",
       title: "Слово найдено!",
       description: `"${trimmed}" добавлено в список`,
     });
@@ -104,6 +105,7 @@ export default function Game() {
     LocalStorage.deleteFoundWord(id);
     setFoundWords(foundWords.filter(w => w.id !== id));
     toast({
+      variant: "warning",
       title: "Удалено",
       description: `"${word}" было удалено`,
     });
@@ -202,6 +204,7 @@ export default function Game() {
           <div className="flex-1 text-center">
             <h1 className="text-2xl font-bold font-mono tracking-wider" data-testid="text-source-word">
               {sourceWord.word}
+              <sup className="text-sm ml-1 text-muted-foreground">{sourceWord.word.length}</sup>
             </h1>
           </div>
           <WordSettingsDialog
@@ -236,6 +239,9 @@ export default function Game() {
                     </Badge>
                     <Badge variant="outline" title="K2" className="font-mono">
                       {metrics.k2.toFixed(2)}
+                    </Badge>
+                    <Badge variant="outline" title="Score" className="font-mono">
+                      {metrics.scrabbleScore}
                     </Badge>
                   </div>
                 </CardContent>

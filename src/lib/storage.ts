@@ -84,25 +84,27 @@ export const validateWord = (word: string, sourceWord: string): { valid: boolean
   const sourceLetters = normalizedSource.split('');
   const wordLetters = normalizedWord.split('');
   const usedLetters: string[] = [];
+  const extraLetters: string[] = [];
 
   for (const letter of wordLetters) {
     const indexInSource = sourceLetters.indexOf(letter);
+    // Find extra letters for better error message
     if (indexInSource === -1) {
-      // Find extra letters for better error message
-      const extraLetters = wordLetters
-        .filter(l => !normalizedSource.includes(l) && !usedLetters.includes(l))
-        .join(', ')
-        .toUpperCase();
-      
-      return { 
-        valid: false, 
-        error: `Слово содержит лишние буквы: ${extraLetters}`,
-        extraLetters
-      };
+      extraLetters.push(letter);
+      continue;
     }
     // Remove the used letter to prevent reusing the same letter instance
     sourceLetters.splice(indexInSource, 1);
     usedLetters.push(letter);
+  }
+
+  if (extraLetters.length > 0) {
+    const extraLettersMsg = extraLetters.join(', ').toUpperCase();
+    return { 
+      valid: false, 
+      error: `Слово содержит лишние буквы: ${extraLettersMsg}`,
+      extraLetters: extraLettersMsg
+    };
   }
 
   return { valid: true };
