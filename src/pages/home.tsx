@@ -303,7 +303,7 @@ export default function Home() {
                           {metrics.k2.toFixed(2)}
                         </Badge>
                         <Badge variant="outline" title="Score" className="font-mono">
-                          {metrics.scrabbleScore}
+                          {metrics.normalizedScrabbleScore.toFixed(2)}
                         </Badge>
                       </div>
                     </div>

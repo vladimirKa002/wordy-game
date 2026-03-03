@@ -103,11 +103,23 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
 
           {/* Scrabble Score Section */}
           <div className="bg-green-50 dark:bg-green-950 p-3 sm:p-4 rounded-lg space-y-3">
-            <div className="text-center mb-3">
-              <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">Эрудит-рейтинг (Scrabble)</div>
-              <div className="text-3xl sm:text-4xl font-bold text-green-700 dark:text-green-300">{metrics.scrabbleScore}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <div className="text-center border-l-4 border-green-600 pl-3">
+                <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">Сумма очков</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-700 dark:text-green-300">{metrics.scrabbleScore}</div>
+                <p className="text-xs text-muted-foreground mt-1">без нормализации</p>
+              </div>
+              <div className="text-center border-l-4 border-green-500 pl-3">
+                <div className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">Нормализованный рейтинг</div>
+                <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{metrics.normalizedScrabbleScore.toFixed(2)}</div>
+                <p className="text-xs text-muted-foreground mt-1">сумма ÷ вес исходного</p>
+              </div>
+            </div>
+            
+            <div className="bg-green-100 dark:bg-green-900 p-2 sm:p-3 rounded text-xs font-mono">
+              <p className="break-words">{metrics.scrabbleScore} ÷ {metrics.sourceWordWeight} = {metrics.normalizedScrabbleScore.toFixed(2)}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Общая сумма очков по системе Эрудит
+                Нормализация учитывает сложность исходного слова. Слово из разных букв - выше нормализованный рейтинг.
               </p>
             </div>
 
@@ -165,11 +177,19 @@ export function WordEfficiencyStatsDialog({ sourceWord, foundWords }: WordEffici
           </div>
 
           {/* Note */}
-          <div className="bg-yellow-50 dark:bg-yellow-950 p-2 sm:p-3 rounded-lg text-xs text-muted-foreground">
-            <p className="break-words">
-              Коэффициенты Фибоначчи применяются на основе разницы между длиной исходного слова и найденным словом.
-              Более длинные найденные слова получают более высокие коэффициенты: N-2 букв → 233, N-3 букв → 144, и т.д.
-            </p>
+          <div className="bg-yellow-50 dark:bg-yellow-950 p-2 sm:p-3 rounded-lg text-xs text-muted-foreground space-y-2">
+            <div>
+              <p className="font-semibold text-xs mb-1">Коэффициенты Фибоначчи:</p>
+              <p className="break-words">
+                Применяются на основе длины найденного слова: 2 буквы → 1, 3 буквы → 2, 4 буквы → 3, 5 букв → 5, 8 букв → 13, и т.д.
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold text-xs mb-1">Нормализация очков:</p>
+              <p className="break-words">
+                Scrabble рейтинг делится на вес исходного слова (сумма очков его букв) для справедливого сравнения разных слов.
+              </p>
+            </div>
           </div>
         </div>
       </DialogContent>

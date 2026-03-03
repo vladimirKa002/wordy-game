@@ -32,9 +32,11 @@ interface WordEfficiencyMetrics {
   sourceWordLength: number;
   k1: number; // Words per letter (without length weighting)
   weightedSum: number; // Sum of words * fibonacci coefficients
-  k2: number; // Weighted words per letter
+  k2: number; // Weighted words per letter (K2 = weightedSum / sourceWordLength)
   efficiency: number; // k2 / k1 efficiency coefficient
   scrabbleScore: number; // Total Scrabble-style score of all found words
+  normalizedScrabbleScore: number; // Scrabble score divided by source word weight
+  sourceWordWeight: number; // Total weight of source word letters
   breakdown: {
     length: number;
     count: number;
@@ -61,6 +63,23 @@ function calculateWordScore(word: string): number {
     }
   }
   return score;
+}
+
+/**
+ * Calculate the total weight of a word based on letter values.
+ * Used to normalize Scrabble scores.
+ */
+function calculateWordWeight(word: string): number {
+  let weight = 0;
+  for (const letter of word) {
+    const upperLetter = letter.toUpperCase();
+    if (RUSSIAN_LETTER_SCORES[upperLetter]) {
+      weight += RUSSIAN_LETTER_SCORES[upperLetter];
+    } else if (ENGLISH_LETTER_SCORES[upperLetter]) {
+      weight += ENGLISH_LETTER_SCORES[upperLetter];
+    }
+  }
+  return weight;
 }
 
 /**
@@ -99,20 +118,19 @@ export function calculateWordEfficiency(
     wordsByLength.set(length, (wordsByLength.get(length) || 0) + 1);
   }
 
-  // Apply Fibonacci coefficients based on word length difference
-  // n can range from N-2 down to 2 (minimum word length)
+  // Apply Fibonacci coefficients based on word length
+  // Word length 2 -> coefficient 1 (Fibonacci[0])
+  // Word length 3 -> coefficient 2 (Fibonacci[1])
+  // Word length 4 -> coefficient 3 (Fibonacci[2])
+  // Word length 5 -> coefficient 5 (Fibonacci[3])
+  // Word length 6 -> coefficient 8 (Fibonacci[4])
+  // ... and so on
   for (let wordLength = 2; wordLength < N; wordLength++) {
     const count = wordsByLength.get(wordLength) || 0;
 
-    // Calculate the difference from source word length
-    const difference = N - wordLength;
-
-    // Map difference to Fibonacci coefficient
-    // difference = 2 (N-2) -> coefficient = 233 (index 11)
-    // difference = 3 (N-3) -> coefficient = 144 (index 10)
-    // ... and so on
+    // Map word length directly to Fibonacci index
+    const fibIndex = wordLength - 2;
     let coefficient = 0;
-    const fibIndex = 11 - (difference - 2);
 
     if (fibIndex >= 0 && fibIndex < FIBONACCI_SEQUENCE.length) {
       coefficient = FIBONACCI_SEQUENCE[fibIndex];
@@ -134,6 +152,9 @@ export function calculateWordEfficiency(
   // Efficiency: k2 / k1
   const efficiency = k1 > 0 ? k2 / k1 : 0;
 
+  // Calculate source word weight
+  const sourceWordWeight = calculateWordWeight(sourceWord);
+
   // Calculate total Scrabble score
   let scrabbleScore = 0;
   const scrabbleBreakdown: WordEfficiencyMetrics["scrabbleBreakdown"] = [];
@@ -150,6 +171,11 @@ export function calculateWordEfficiency(
   // Sort breakdown by score (descending)
   scrabbleBreakdown.sort((a, b) => b.score - a.score);
 
+  // Normalize Scrabble score by source word weight
+  const normalizedScrabbleScore = sourceWordWeight > 0 
+    ? Math.round((scrabbleScore / sourceWordWeight) * 100) / 100
+    : 0;
+
   return {
     totalWords: W,
     sourceWordLength: N,
@@ -158,6 +184,8 @@ export function calculateWordEfficiency(
     k2: Math.round(k2 * 100) / 100, // Round to 2 decimals
     efficiency: Math.round(efficiency * 100) / 100, // Round to 2 decimals
     scrabbleScore,
+    normalizedScrabbleScore,
+    sourceWordWeight,
     breakdown,
     scrabbleBreakdown,
   };

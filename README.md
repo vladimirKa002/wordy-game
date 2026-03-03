@@ -56,11 +56,17 @@ Measures how productively the source word generates found words based on word le
 - **K1** = Total found words ÷ Source word length (baseline ratio)
 - **K2** = (Weighted sum of found words) ÷ Source word length
 
-The weighting uses Fibonacci coefficients based on word length differences. Words that are 2 letters shorter than the source get coefficient 233, those 3 letters shorter get 144, and so on (following the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233). This encourages finding longer derived words over shorter ones.
+The weighting uses Fibonacci coefficients based on the length of found words: 2-letter words get coefficient 1, 3-letter words get 2, 4-letter words get 3, 5-letter words get 5, 8-letter words get 13, and so on (following the Fibonacci sequence: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233). This rewards finding longer, more complex words.
 
 ### Scrabble-Style Score (Эрудит)
 
-Each found word receives points based on letter values, similar to the board game Scrabble. This metric rewards finding words with high-value letters.
+Each found word receives points based on letter values, similar to the board game Scrabble. The total score is then **normalized** by dividing it by the weight of the source word, which ensures fair comparison across different source words.
+
+**Normalization Formula**: 
+- Normalized Score = Total Scrabble Points ÷ Source Word Weight
+- Source Word Weight = Sum of point values for all letters in the source word
+
+This means words created from high-value letter combinations get a fair baseline that accounts for the inherent difficulty of the source word.
 
 **Russian Letter Values:**
 - 1 point: А Е И О
@@ -79,7 +85,7 @@ Each found word receives points based on letter values, similar to the board gam
 - 8 points: J X
 - 10 points: Q Z
 
-The total Scrabble score appears on the home page and in detailed statistics, and the game supports both Russian and English words simultaneously.
+The total Scrabble score and normalized score both appear in detailed statistics, and the game supports both Russian and English words simultaneously.
 
 ---
 
