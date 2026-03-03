@@ -46,11 +46,11 @@ export default function Home() {
       return;
     }
 
-    if (!/^[А-ЯЁ]+$/i.test(trimmed)) {
+    if (!/^[А-ЯЁA-Z]+$/i.test(trimmed)) {
       toast({
         variant: "warning",
         title: "Недопустимые символы",
-        description: "Слово должно содержать только русские буквы",
+        description: "Слово должно содержать только русские или английские буквы",
       });
       return;
     }
