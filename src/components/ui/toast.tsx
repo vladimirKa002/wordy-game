@@ -35,21 +35,21 @@ const toastVariants = cva(
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
         warning:
-          "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200",
+          "border-amber-300 bg-amber-100 text-amber-900 dark:border-amber-600 dark:bg-amber-800/40 dark:text-amber-100",
         success:
-          "border-green-200 bg-green-50 text-green-900 dark:border-green-800 dark:bg-green-900/20 dark:text-green-200",
+          "border-green-300 bg-green-100 text-green-900 dark:border-green-600 dark:bg-green-800/40 dark:text-green-100",
         error_letter:
-          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
+          "border-orange-300 bg-orange-100 text-orange-900 dark:border-orange-600 dark:bg-orange-800/40 dark:text-orange-100",
         error_repeat:
-          "border-pink-200 bg-pink-50 text-pink-900 dark:border-pink-800 dark:bg-pink-900/20 dark:text-pink-200",
+          "border-pink-300 bg-pink-100 text-pink-900 dark:border-pink-600 dark:bg-pink-800/40 dark:text-pink-100",
         export_success:
-          "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200",
+          "border-blue-300 bg-blue-100 text-blue-900 dark:border-blue-600 dark:bg-blue-800/40 dark:text-blue-100",
         import_success:
-          "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-200",
+          "border-blue-300 bg-blue-100 text-blue-900 dark:border-blue-600 dark:bg-blue-800/40 dark:text-blue-100",
         export_error:
-          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
+          "border-orange-300 bg-orange-100 text-orange-900 dark:border-orange-600 dark:bg-orange-800/40 dark:text-orange-100",
         import_error:
-          "border-orange-200 bg-orange-50 text-orange-900 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-200",
+          "border-orange-300 bg-orange-100 text-orange-900 dark:border-orange-600 dark:bg-orange-800/40 dark:text-orange-100",
       },
     },
     defaultVariants: {

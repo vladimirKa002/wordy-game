@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type DragEvent } from "react";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Shuffle, Plus, X } from "lucide-react";
+import { ArrowLeft, Shuffle, Plus, X, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 import { LetterTile } from "@/components/letter-tile";
 import { FoundWordsList } from "@/components/found-words-list";
 import { WordSettingsDialog } from "@/components/word-settings-dialog";
-import { WordEfficiencyStatsDialog } from "@/components/word-efficiency-stats-dialog";
 
 export default function Game() {
   const [, params] = useRoute("/game/:id");
@@ -228,10 +227,12 @@ export default function Game() {
                     <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                       Эффективность
                     </h2>
-                    <WordEfficiencyStatsDialog
-                      sourceWord={sourceWord.word}
-                      foundWords={foundWords}
-                    />
+                    <Link href={`/game/${sourceWord.id}/stats`}>
+                      <Button variant="outline" size="sm">
+                        <BarChart3 className="w-5 h-5" />
+                        Расшифровка
+                      </Button>
+                    </Link>
                   </div>
                   <div className="flex items-start justify-start gap-2">
                     <Badge variant="outline" title="K1" className="font-mono">

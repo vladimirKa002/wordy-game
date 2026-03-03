@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { InstallPrompt } from "@/components/install-prompt";
 import Home from "@/pages/home";
 import Game from "@/pages/game";
+import WordEfficiencyStats from "@/pages/word-efficiency-stats";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
@@ -14,6 +15,7 @@ function AppRouter() {
     <Router hook={useHashLocation}>
 	  <Switch>
         <Route path="/" component={Home} />
+        <Route path="/game/:id/stats" component={WordEfficiencyStats} />
         <Route path="/game/:id" component={Game} />
         <Route component={NotFound} />
 	  </Switch>
