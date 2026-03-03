@@ -69,8 +69,8 @@ export function WordSettingsDialog({
         description: `Слова для "${sourceWord.word}" экспортированы`,
       });
 
-      // Close dialog after current event loop - universal solution for all platforms
-      Promise.resolve().then(() => setSettingsOpen(false));
+      // Close dialog using requestAnimationFrame - better iOS compatibility
+      requestAnimationFrame(() => setSettingsOpen(false));
     } catch (error) {
       toast({
         variant: "import_error",
@@ -91,8 +91,8 @@ export function WordSettingsDialog({
         description: "JSON скопирован в буфер обмена",
       });
       
-      // Close dialog after current event loop - universal solution for all platforms
-      Promise.resolve().then(() => setSettingsOpen(false));
+      // Close dialog using requestAnimationFrame - better iOS compatibility
+      requestAnimationFrame(() => setSettingsOpen(false));
     } catch (error) {
       toast({
         variant: "import_error",
@@ -139,8 +139,8 @@ export function WordSettingsDialog({
         title: "Нет новых слов",
         description: "Все слова из файла уже добавлены",
       });
-      // Close dialog after current event loop - universal solution for all platforms
-      Promise.resolve().then(() => setSettingsOpen(false));
+      // Close dialog using requestAnimationFrame - better iOS compatibility
+      requestAnimationFrame(() => setSettingsOpen(false));
       return;
     }
 
@@ -152,8 +152,8 @@ export function WordSettingsDialog({
       description: `Добавлено ${newWords.length} новых слов для "${sourceWord.word}"`,
     });
 
-    // Close dialog after current event loop - universal solution for all platforms
-    Promise.resolve().then(() => setSettingsOpen(false));
+    // Close dialog using requestAnimationFrame - better iOS compatibility
+    requestAnimationFrame(() => setSettingsOpen(false));
   };
 
   const handleImport = async () => {
@@ -201,8 +201,8 @@ export function WordSettingsDialog({
 
   const handleDelete = () => {
     onDeleteWord(sourceWord.id);
-    // Close dialog after current event loop - universal solution for all platforms
-    Promise.resolve().then(() => setSettingsOpen(false));
+    // Close dialog using requestAnimationFrame - better iOS compatibility
+    requestAnimationFrame(() => setSettingsOpen(false));
   };
 
   return (
